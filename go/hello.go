@@ -19,8 +19,7 @@ func generator(msg string) <-chan *Message {
 			waitForIt := make(chan bool)
 			ch <- &Message{fmt.Sprintf("%s %d", msg, i), waitForIt}
 			time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
-			// wait to advance
-			<-waitForIt
+			<-waitForIt  // wait to advance
 		}
 		close(ch)
 	}()
