@@ -34,6 +34,11 @@ func Google(query string) (results []Result) {
 	go func() {
 		c <- Video(query)
 	}()
+
+	for i := 0; i < 3; i++ {
+		result := <-c
+		results = append(results, result)
+	}
 	// results = append(results, Web(query))
 	// results = append(results, Image(query))
 	// results = append(results, Video(query))
