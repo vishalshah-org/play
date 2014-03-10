@@ -15,13 +15,13 @@ type Message struct {
 func generator(msg string) <-chan *Message {
 	ch := make(chan *Message)
 	go func() {
-		for i := 0; i < 10; i++ {
+		for i := 0; ; i++ {
 			waitForIt := make(chan bool)
 			ch <- &Message{fmt.Sprintf("%s %d", msg, i), waitForIt}
 			time.Sleep(time.Duration(rand.Intn(1e3)) * time.Millisecond)
-			<-waitForIt  // wait to advance
+			// <-waitForIt  // wait to advance
 		}
-		close(ch)
+		// close(ch)
 	}()
 	return ch
 }
@@ -67,7 +67,14 @@ func run() {
 }
 
 func main() {
-	run()
+	// run()
+	ch := generator("joe")
+	for i := 0; i < 10; i++ {
+		select {
+		case msg := <-ch:
+			fmt.Println(msg.str)
+		}
+	}
 
 	// for v := range generator("foo") {
 	// 	fmt.Println(v)
